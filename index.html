@@ -1,52 +1,141 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Teste de Movimento</title>
-  <style>
-    body {
-      margin: 0;
-      background: #111;
-      overflow: hidden;
-    }
+<meta charset="UTF-8" />
+<title>Labirinto com Movimento</title>
+<style>
+  body {
+    margin: 0;
+    background: #222;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  #labirinto {
+    position: relative;
+    width: 320px;
+    height: 320px;
+    background: #eee;
+    border: 3px solid #444;
+    box-sizing: border-box;
+  }
+  .parede {
+    position: absolute;
+    background: #444;
+  }
+  /* Paredes - cada uma é um retângulo posicionado */
+  .parede1 { top: 0; left: 0; width: 320px; height: 20px; }
+  .parede2 { top: 0; left: 0; width: 20px; height: 320px; }
+  .parede3 { top: 300px; left: 0; width: 320px; height: 20px; }
+  .parede4 { top: 0; left: 300px; width: 20px; height: 320px; }
 
-    #personagem {
-      width: 50px;
-      height: 50px;
-      background: green;
-      position: absolute;
-      top: 100px;
-      left: 100px;
-    }
-  </style>
+  .parede5 { top: 60px; left: 20px; width: 200px; height: 20px; }
+  .parede6 { top: 60px; left: 200px; width: 20px; height: 80px; }
+  .parede7 { top: 140px; left: 100px; width: 120px; height: 20px; }
+  .parede8 { top: 140px; left: 100px; width: 20px; height: 100px; }
+  .parede9 { top: 240px; left: 20px; width: 100px; height: 20px; }
+  .parede10 { top: 200px; left: 100px; width: 20px; height: 60px; }
+
+  #personagem {
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    background: green;
+    top: 30px;
+    left: 30px;
+    border-radius: 4px;
+    transition: top 0.1s, left 0.1s;
+  }
+</style>
 </head>
 <body>
-  <div id="personagem"></div>
+  <div id="labirinto">
+    <div id="personagem"></div>
+    <div class="parede parede1"></div>
+    <div class="parede parede2"></div>
+    <div class="parede parede3"></div>
+    <div class="parede parede4"></div>
+    <div class="parede parede5"></div>
+    <div class="parede parede6"></div>
+    <div class="parede parede7"></div>
+    <div class="parede parede8"></div>
+    <div class="parede parede9"></div>
+    <div class="parede parede10"></div>
+  </div>
 
-  <script>
-    const personagem = document.getElementById("personagem");
-    let posX = 100;
-    let posY = 100;
-    const velocidade = 10;
+<script>
+  const personagem = document.getElementById('personagem');
+  const labirinto = document.getElementById('labirinto');
+  const paredes = Array.from(document.getElementsByClassName('parede'));
 
-    window.addEventListener("keydown", (evento) => {
-      switch (evento.key) {
-        case "ArrowUp":
-          posY -= velocidade;
-          break;
-        case "ArrowDown":
-          posY += velocidade;
-          break;
-        case "ArrowLeft":
-          posX -= velocidade;
-          break;
-        case "ArrowRight":
-          posX += velocidade;
-          break;
-      }
-      personagem.style.left = posX + "px";
-      personagem.style.top = posY + "px";
-    });
-  </script>
+  // Posição inicial do personagem
+  let posX = 30;
+  let posY = 30;
+  const tamanhoPasso = 10;
+
+  // Função para detectar colisão entre personagem e uma parede
+  function colide(x, y, elemento) {
+    const pLeft = x;
+    const pTop = y;
+    const pRight = x + personagem.offsetWidth;
+    const pBottom = y + personagem.offsetHeight;
+
+    const eLeft = elemento.offsetLeft;
+    const eTop = elemento.offsetTop;
+    const eRight = eLeft + elemento.offsetWidth;
+    const eBottom = eTop + elemento.offsetHeight;
+
+    return !(pRight <= eLeft || pLeft >= eRight || pBottom <= eTop || pTop >= eBottom);
+  }
+
+  // Função para testar se em (x,y) bate em alguma parede
+  function podeMover(x, y) {
+    // Verifica limites do labirinto
+    if (x < 0 || y < 0 || (x + personagem.offsetWidth) > labirinto.clientWidth || (y + personagem.offsetHeight) > labirinto.clientHeight) {
+      return false;
+    }
+
+    // Verifica colisão com paredes
+    for (const parede of paredes) {
+      if (colide(x, y, parede)) return false;
+    }
+    return true;
+  }
+
+  // Atualiza posição do personagem no DOM
+  function moverPersonagem(x, y) {
+    personagem.style.left = x + 'px';
+    personagem.style.top = y + 'px';
+  }
+
+  window.addEventListener('keydown', (e) => {
+    let novoX = posX;
+    let novoY = posY;
+
+    switch(e.key) {
+      case 'ArrowUp':
+        novoY -= tamanhoPasso;
+        break;
+      case 'ArrowDown':
+        novoY += tamanhoPasso;
+        break;
+      case 'ArrowLeft':
+        novoX -= tamanhoPasso;
+        break;
+      case 'ArrowRight':
+        novoX += tamanhoPasso;
+        break;
+      default:
+        return; // Ignora outras teclas
+    }
+
+    if (podeMover(novoX, novoY)) {
+      posX = novoX;
+      posY = novoY;
+      moverPersonagem(posX, posY);
+    }
+  });
+</script>
 </body>
 </html>
