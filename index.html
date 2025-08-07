@@ -2,28 +2,21 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Movimento com Setas</title>
+  <title>Teste de Movimento</title>
   <style>
     body {
       margin: 0;
+      background: #111;
       overflow: hidden;
-      background: #222;
-    }
-
-    #gameCanvas {
-      background: #444;
-      display: block;
-      margin: 0 auto;
     }
 
     #personagem {
-      width: 40px;
-      height: 40px;
+      width: 50px;
+      height: 50px;
       background: red;
       position: absolute;
       top: 100px;
       left: 100px;
-      border-radius: 5px;
     }
   </style>
 </head>
@@ -31,25 +24,20 @@
   <div id="personagem"></div>
 
   <script>
-    const personagem = document.getElementById('personagem');
+    const personagem = document.getElementById("personagem");
     let posX = 100;
     let posY = 100;
     const velocidade = 10;
 
-    window.addEventListener('keydown', (e) => {
-      switch (e.key) {
-        case "ArrowUp":
-          posY -= velocidade;
-          break;
-        case "ArrowDown":
-          posY += velocidade;
-          break;
-        case "ArrowLeft":
-          posX -= velocidade;
-          break;
-        case "ArrowRight":
-          posX += velocidade;
-          break;
+    window.addEventListener("keydown", (evento) => {
+      if (evento.key === "ArrowRight") {
+        posX += velocidade;
+      } else if (evento.key === "ArrowLeft") {
+        posX -= velocidade;
+      } else if (evento.key === "ArrowUp") {
+        posY -= velocidade;
+      } else if (evento.key === "ArrowDown") {
+        posY += velocidade;
       }
 
       personagem.style.left = posX + "px";
