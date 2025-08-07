@@ -13,7 +13,7 @@
     #personagem {
       width: 50px;
       height: 50px;
-      background: red;
+      background: green;
       position: absolute;
       top: 100px;
       left: 100px;
@@ -30,16 +30,20 @@
     const velocidade = 10;
 
     window.addEventListener("keydown", (evento) => {
-      if (evento.key === "ArrowRight") {
-        posX += velocidade;
-      } else if (evento.key === "ArrowLeft") {
-        posX -= velocidade;
-      } else if (evento.key === "ArrowUp") {
-        posY -= velocidade;
-      } else if (evento.key === "ArrowDown") {
-        posY += velocidade;
+      switch (evento.key) {
+        case "ArrowUp":
+          posY -= velocidade;
+          break;
+        case "ArrowDown":
+          posY += velocidade;
+          break;
+        case "ArrowLeft":
+          posX -= velocidade;
+          break;
+        case "ArrowRight":
+          posX += velocidade;
+          break;
       }
-
       personagem.style.left = posX + "px";
       personagem.style.top = posY + "px";
     });
